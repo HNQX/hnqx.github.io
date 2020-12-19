@@ -1,0 +1,6 @@
+[03-Aug-2019 02:20:00 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'nashanxy_geodb'@'localhost' (using password: YES) in /home/nashanxy/public_html/SUBS/mus/index.php on line 16
+[03-Aug-2019 02:20:00 UTC] PHP Warning:  mysqli::set_charset(): Couldn't fetch mysqli in /home/nashanxy/public_html/SUBS/mus/index.php on line 17
+[03-Aug-2019 02:20:00 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/nashanxy/public_html/SUBS/mus/index.php on line 67
+[03-Aug-2019 02:20:08 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'nashanxy_geodb'@'localhost' (using password: YES) in /home/nashanxy/public_html/SUBS/mus/index.php on line 16
+[03-Aug-2019 02:20:08 UTC] PHP Warning:  mysqli::set_charset(): Couldn't fetch mysqli in /home/nashanxy/public_html/SUBS/mus/index.php on line 17
+[03-Aug-2019 02:20:08 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/nashanxy/public_html/SUBS/mus/index.php on line 67
