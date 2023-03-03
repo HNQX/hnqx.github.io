@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+    <style>
+        html body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style=" text-align: center;">
+        <input id="searchText" type="text">
+        <button id="search">search</button>
+        <button hidden id="clear">clear</button>
+
+        <div id="list"> </div>
+    </div>
+
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.slim.min.js"></script>
+    <script type="module">
+
+
+        $('#search').click(() => {
+            _render($('#searchText')[0].value)
+        })
+
+        $('#clear').click(() => {
+            _fill()
+            $('#clear').attr('hidden', 'hidden')
+        })
+
+        function _render(keyword) {
+
+            if (!keyword) _fill()
+            else fetch(`https://api.bgm.tv/search/subject/${keyword}?type=2&responseGroup=small&start=0&max_results=10`).then(r => r.json())
+                .then(r => _r(r.list)).catch(err => _r())
+        }
+
+        function _r(data) {
+            let content = ''
+            if (data && data.length) {
+                data.forEach(i => {
+                    content += `<div style="margin: 50px 0;">
+                    <span>${i.id}</span>
+                    <span>${i.name_cn}</span><br>
+                    <img src=${i.images.medium}>
+                </div>`
+                })
+                _fill(content)
+                $('#clear').removeAttr('hidden')
+            } else _fill('no data')
+
+        }
+
+        function _fill(content) {
+            $('#list').html(content || '')
+        }
+
+    </script>
+
+
+</body>
+
+</html>
