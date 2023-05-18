@@ -135,7 +135,7 @@ $(document).ready(function () {
                 layer.open({
                     type: 2, skin: 'layui-layer-demo', title: false,
                     closeBtn: 0, anim: 2, shadeClose: true,
-                    content: `me.22222223.xyz/src/edit.html`,
+                    content: `://me.22222223.xyz/src/edit.html`,
                     success: function (e) {
                         window[e.find('iframe')[0]['name']].setRow(query)
                     }
