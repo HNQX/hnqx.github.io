@@ -21,12 +21,12 @@ window.mapboxParams = {
     },
     {
       name: 'Outdoors',
-      icon: 'thumb-2.png',
+      icon: 'images/thumb-2.png',
       url: 'mapbox://styles/mapbox/outdoors-v12'
     },
     {
       name: 'Light',
-      icon: 'thumb-3.png',
+      icon: 'images/thumb-3.png',
       url: 'mapbox://styles/mapbox/light-v11'
     },
     {
