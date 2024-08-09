@@ -5,11 +5,11 @@ window.mapboxParams = {
   styles: [{
     name: 'Streets',
     icon: 'images/thumb-map.jpg',
-    url: 'mapbox://styles/hanccc/clzm3tpry003u01pz9c4ab71q'
+    url: 'mapbox://styles/mapbox/standard'
   }, {
     name: 'Satellite',
     icon: 'images/thumb-satellite.jpg',
     dark: true,
-    url: 'mapbox://styles/hanccc/clzm3sva1003m01r833og67x9'
+    url: 'mapbox://styles/mapbox/standard-satellite'
   }]
 };
