@@ -39,7 +39,7 @@
 	<svg id="pointer-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" width="15" height="22" viewBox="0 0 15 20"><rect x="7.4126" y="11.0354" width="3.9102" height="7.9841" transform="translate(-5.8889 6.0377) rotate(-27.5536)" fill="#30d4ef"/><polygon points="2.57 2.086 2.718 16.056 13.944 10.198 2.57 2.086" fill="#30d4ef"/></svg>
 
 	<!-- adjusted height -->
-	<svg id="ribbon-icon" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="15" height="25" viewBox="0 1 15 20">
+	<svg id="ribbon-icon" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="15" height="26" viewBox="0 0 15 20">
 	  <polygon points="8 14.5 13 19 13 4 3 4 3 19 8 14.5" fill="#30d4ef"/>
 	</svg>
  
@@ -76,7 +76,7 @@
 		<input type="text" value="label" class="clicktext" />
 	</div></div>
 	<div id="mode-buttons" class="page-header-buttons">
-		<span class="console-btn header-btn btn">Console</span><span class="basemap-btn header-btn btn">Basemap</span><span class="separator"></span><span class="separator"></span><span class="simplify-btn header-btn btn">Simplify</span><span class="separator"></span><span class="export-btn header-btn btn">Export</span>
+		<span class="basemap-btn header-btn btn">Basemap</span><span class="separator"></span><span class="simplify-btn header-btn btn">Simplify</span><span class="separator"></span><span class="console-btn header-btn btn">Console</span><span class="separator"></span><span class="export-btn header-btn btn">Export</span>
 	</div>
 	<div id="splash-buttons" class="page-header-buttons">
 		<a href="https://github.com/mbloch/mapshaper/wiki"><span id="wiki-btn" class="header-btn btn">Wiki</span></a><span class="separator"></span><a href="https://github.com/mbloch/mapshaper"><span id="github-btn" class="header-btn btn">GitHub</span></a>
@@ -96,49 +96,45 @@
 		<div class="layer-menu">
 			<h3>Layers</h3>
 			<div class="pin-all pinnable">
-				<img class="eye-btn black-eye" src="images/eye.png">
-				<img class="eye-btn green-eye" src="images/eye2.png">
-			</div>
+				<img class="pin-btn unpinned" src="images/eye.png">
+				<img class="pin-btn pinned" src="images/eye2.png">
+	</div>
 			<div class="layer-list"></div>
 			<!-- <h4>Sources</h4> -->
-			<div class="no-layer-note">No data has been added</div>
-			<div class="source-file-section">
-				<h4>Source files</h4>
-				<div class="file-list"></div>
-			</div>
+			<h4>Source files</h4>
+			<div class="file-list"></div>
 			<div>
-				<div id="add-file-btn" class="dialog-btn btn">Add files</div>
-				<div id="add-empty-btn" class="dialog-btn btn">Add empty layer</div>
+				<div id="add-file-btn" class="dialog-btn btn">Add a file</div>
+				<!-- <div id="add-empty-btn" class="dialog-btn btn">Empty layer</div> -->
 			</div>
 		</div>
 		</div>
 	</div>
 </div>
 
-
-<div class="box-tool-options sidebar-buttons">
-	<div>
-		<div class="select-btn btn sidebar-btn">Select</div>
-		<div class="clip-btn btn sidebar-btn">Clip</div>
-		<div class="erase-btn btn sidebar-btn">Erase</div>
-		<div class="rect-btn btn sidebar-btn">Rectangle</div>
-		<div class="frame-btn btn sidebar-btn">Frame</div>
-		<div class="info-btn btn sidebar-btn">Bounds</div>
+<div class="box-tool-options main-area popup-dialog">
+	<div class="info-box controls">
+		<div>
+			<div class="select-btn btn dialog-btn">Select</div>
+			<div class="clip-btn btn dialog-btn">Clip</div>
+			<div class="erase-btn btn dialog-btn">Erase</div>
+			<div class="rect-btn btn dialog-btn">Rectangle</div>
+			<div class="info-btn btn dialog-btn">Coords</div>
+			<!-- <div class="zoom-btn btn dialog-btn">Zoom In</div> -->
+			<div class="cancel-btn btn dialog-btn">Cancel</div>
+		</div>
 		<div class="box-coords selectable"></div>
-		<div class="cancel-btn btn sidebar-btn">Cancel</div>
 	</div>
 </div>
 
-<div class="selection-tool-options sidebar-buttons">
-	<div>
-		<div class="delete-btn btn sidebar-btn">Delete</div>
-		<div class="filter-btn btn sidebar-btn">Keep</div>
-		<div class="duplicate-btn btn sidebar-btn">Duplicate</div>
-		<div class="split-btn btn sidebar-btn">Split</div>
-		<div class="coords-btn btn sidebar-btn toggle-btn">Bounds</div>
-		<div class="box-coords selectable"></div>
-		<div class="data-btn btn sidebar-btn toggle-btn">Edit data</div>
-		<div class="cancel-btn btn sidebar-btn">Clear</div>
+<div class="selection-tool-options main-area popup-dialog">
+	<div class="info-box">
+		<div>
+			<div class="delete-btn btn dialog-btn">Delete</div>
+			<div class="filter-btn btn dialog-btn">Keep</div>
+			<div class="split-btn btn dialog-btn">Split</div>
+			<div class="cancel-btn btn dialog-btn">Clear</div>
+		</div>
 	</div>
 </div>
 
@@ -146,20 +142,21 @@
 	<div class="info-box">
 		<div class="close2-btn"></div>
 		<h3>Export options</h3>
+		<div style="height:3px"></div>
 		<div class=export-layers>
 			<h4 class="menu-title">Layers</h4>
 			<div class="export-layer-list option-menu"></div>
 		</div>
 		<div class="export-zip-option option-menu">
 
-		<div style="height:6px"></div>
+		<div style="height:10px"></div>
 
 		</div>
 		<h4>File format</h4>
 		<div class="export-formats option-menu">
 		</div>
 
-		<div style="height:11px"></div>
+		<div style="height:10px"></div>
 
 		<div class="option-menu"><input type="text" class="text-input advanced-options" placeholder="command line options" />
 		<a href="https://github.com/mbloch/mapshaper/wiki/Command-Reference#-o-output" target="_mapshaper_output_docs">
@@ -167,14 +164,15 @@
 		<div class="tip">Enter options from the command line interface for
 the -o command. Examples: bbox no-quantization
 precision=0.001. Click to see all options.</div></div></div></a>
+</div>
 
 	<!-- 	<div class="option-menu">
 	<input id="ofile-name" class="text-input" type="text" placeholder="output file name" />
 	</div> -->
-		<div><span id="save-preference" style="display: none;"><input type="checkbox"/>choose output directory</span></div>
-		<div><span id="save-to-clipboard" style="display: inline-block;"><input type="checkbox"/>save to clipboard</span></div>
-		</div>
-		<div id="export-btn" class="btn dialog-btn" style="margin-top: 4px;">Export</div>
+
+		<!-- <div class="cancel-btn btn dialog-btn">Cancel</div> -->
+		<div class="save-btn btn dialog-btn">Export</div>
+		<span id="save-preference" class="inline-checkbox" style="display: none;"><input type="checkbox"/>choose directory</span>
 
 	</div>
 </div>
@@ -183,9 +181,9 @@ precision=0.001. Click to see all options.</div></div></div></a>
 	<div class="info-box">
 		<div class="close2-btn"></div>
 		<h3>Basemap options</h3>
-		<p class="basemap-note"></p>
+		<p class="basemap-note">Your data will be displayed using the Mercator projection.</p>
 		<p class="basemap-warning"></p>
-		<div class="basemap-styles basemap-buttons"></div>
+		<div class="basemap-styles"></div>
 		<div>
 			<!-- <div class="close-btn btn dialog-btn">Close</div> -->
 			<div class="clear-btn btn dialog-btn disabled">Clear</div>
@@ -247,59 +245,88 @@ a smoother appearance.</div></div></div></div>
 	</div> <!-- .info-box -->
 </div> <!-- simplify-options -->
 
+<div id="splash-screen" class="main-area">
+	<div>
+		<h3 id="splash-screen-blurb">Mapshaper is an editor for map data</h3>
+	</div>
+	<div id="drop-areas" class="drop-area-wrapper main-area">
+
+		<div class="file-catalog catalog-area">
+		</div>
+		<div class="file-catalog-spacer spacer"></div>
+
+		<div id="import-drop" class="drop-area">
+			<h4>Drop or paste files here or <span class="inline-btn btn" id="file-selection-btn"><span class="label-text">select</span></span> from a folder</h4>
+			<div class="subtitle">Shapefile, GeoJSON, TopoJSON, KML and CSV files are supported</div>
+			<div class="subtitle">Files can be gzipped or in a zip archive</div>
+		</div>
+		<div class="spacer"></div>
+		<div id="import-quick-drop" class="drop-area">
+			<h4>Quick import</h4>
+			<div class="subtitle">Drop or paste files here to import with default settings</div>
+		</div>
+	</div>
+</div>
+
 <div id="import-options" class="main-area popup-dialog">
 	<div class="info-box">
-		<div class="cancel-btn close2-btn"></div>
-		<h3 class="list-header">Import files</h3>
-		<div class="import-instructions">
-			<span><input type="checkbox" class="advanced-import-options" />with advanced options</span>
-			<div class="mini-drop-area">
-				<div class="subtitle">Drop, paste or <span class="add-btn inline-btn btn"><span class="label-text">select</span></span> files to import.</div>
-				<div class="subtitle">Shapefile, GeoJSON, TopoJSON, KML and CSV formats are supported. Files can be zipped or gzipped.</div>
-			</div>
-		</div>
-		<div class="queued-file-section">
-			<!-- <h4>Files</h4> -->
-			<div class="dropped-file-list"></div>
-			
-			<div class="option-menu">
+		<h3 class="list-header">Files</h3>
+
+		<div class="dropped-file-list"></div>
+		
+		<div class="option-menu">
 
 			<div id="path-import-options">
-				<!-- <h4>Options</h4> -->
-			</div>
+				<h4>Options</h4>
 
-			<div style="margin-top: 10px"><input type="text" class="text-input advanced-options" placeholder="import options" />
-				<a href="https://github.com/mbloch/mapshaper/wiki/Command-Reference#-i-input" target="_mapshaper_import_docs">
+				<div><label for="repair-intersections-opt"><input type="checkbox" checked class="checkbox" id="repair-intersections-opt"/>detect line intersections</label>
 				<div class="tip-button">?<div class="tip-anchor">
-	<div class="tip">Enter options from the command line
+
+<div class="tip">Detect line intersections, including
+self-intersections, to help identify
+topological errors in a dataset.</div></div></div></div>
+
+				<!-- <div><label for="snap-points-opt"><input type="checkbox" class="checkbox" id="snap-points-opt" />snap vertices</label>
+				<div class="tip-button">?<div class="tip-anchor">
+<div class="tip">Fix topology errors by snapping
+together points with nearly identical
+coordinates. This option does not
+apply to TopoJSON files.</div></div></div></div> -->
+<div style="height:5px"></div>
+
+		</div>
+
+		<div><input type="text" class="text-input advanced-options" placeholder="import options" />
+			<a href="https://github.com/mbloch/mapshaper/wiki/Command-Reference#-i-input" target="_mapshaper_import_docs">
+			<div class="tip-button">?<div class="tip-anchor">
+<div class="tip">Enter options from the command line
 interface. Examples: <span id="import-option-examples">snap no-topology
 encoding=big5</span>. Click to see all options.</div></div></div></div>
-			</a>
+		</a>
 
-			</div>
+		</div>
 
-	<!-- 			<div class="cancel-btn btn dialog-btn">Cancel</div>
-				<div class="add-btn btn dialog-btn">Select</div> -->
-				<div class="submit-btn btn dialog-btn default-btn disabled">Submit</div>
-
+		<div id="import-buttons">
+			<div class="cancel-btn btn dialog-btn">Cancel</div>
+			<div class="add-btn btn dialog-btn">Select</div>
+			<div class="submit-btn btn dialog-btn default-btn">Import</div>
 		</div>
 
 	</div> <!-- .info-box -->
 </div> <!-- import-options -->
 
+
 <!-- TODO: remove #mshp-main-page without causing the map to jitter when resized -->
 <div id="mshp-main-page">
-
 	<div class="console main-area console-area">
 		<div class="console-window"><div class="console-buffer selectable"></div></div>
 	</div>
 	<div class="mshp-main-map main-area map-area">
+		<div class="coordinate-info colored-text selectable"></div>
 		<div class="intersection-display">
-			<span class="intersection-check text-btn colored-text">Check line intersections</span><span class="intersection-count">0 line intersections</span>
-			<img class="close-btn" draggable="false" src="images/close.png">
+			<div class="intersection-count">0 line intersections</div>
 			<div class="repair-btn text-btn colored-text">Repair</div>
 		</div>
-		<div class="basemap-overlay-buttons basemap-buttons"></div>
 		<div class="map-layers"></div>
 		<div class="basemap-container"><div class="basemap"></div></div>
 	</div>
