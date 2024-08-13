@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./cmap.css">
+    <!-- <script src="./cmap-src.js"></script> -->
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+
+    <!-- <script>
+        console.log(L)
+
+    </script> -->
+
+
+
+    <script type="module">
+        import { Map } from './cmap-src.esm.js'
+
+        let map
+
+        map = new Map('map', {
+            baseLayerPicker: false,
+
+            shouldAnimate: false, // 默认开启动画
+            animation: false, // 动画操作盘
+            timeline: false, // 底部时间轴
+            // 地图加载完回调
+            onload: () => {
+                console.log('map init');
+            },
+
+            // 选中地图中要素时回调
+            onpick: (e) => {
+                // console.log(e);
+
+                if (!e.target) return
+                const id = e.target.id._id
+                const position = map.geo.getPositionWithId(id)
+
+                // console.log(position);
+
+            },
+
+            // 选中航线时回调
+            onselectAirline: e => {
+                console.log(e);
+
+                // setTimeout(() => {
+
+                //   map.air.deleteAirline()
+                // }, 1000);
+            },
+
+            defineInit: {
+                baseMap: 5,
+                timeOffset: 8, // 时区
+                paint: true,
+                compass: {
+                    enable: false, // 罗盘
+                    distance: false, // 比例尺
+                    zoom: false, // 缩放控件
+                    center: [121, 31, 5000]
+                }
+            }
+        })
+
+
+        const api_1 = map.api_landingPoint()
+
+        setTimeout(() => {
+
+            const option = {
+                airroad: false,
+                color: [1, 0, 1, 0.7],
+                // volumeColor: [50 / 255, 80 / 255, 255 / 255, 0.05], // 蓝色系1
+                // volumeOutlineColor: [50 / 255, 80 / 255, 255 / 255, 0.05],
+
+                volumeColor: [102 / 255, 204 / 255, 255 / 255, 0.05], // 蓝色系2
+                volumeOutlineColor: [102 / 255, 204 / 255, 255 / 255, 0.05],
+
+                // volumeColor: [156 / 255, 180 / 255, 135 / 255, 0.1], // 绿色系1
+                // volumeOutlineColor: [156 / 255, 180 / 255, 135 / 255, 0.1],
+
+                // volumeColor: [120 / 255, 240 / 255, 110 / 255, 0.1], // 绿色系2
+                // volumeOutlineColor: [120 / 255, 240 / 255, 110 / 255, 0.1],
+
+                volumeHighLightColor: [1, 0, 0, 0.03],
+            }
+            map.air.start_airline(option)
+        }, 2000);
+
+        setTimeout(() => {
+            return
+            const option = {
+                type: 'yuanxing', // {string} 绘制类型 enum['yuanxing','quyu'] yuanxing => 圆形空域，包括圆锥圆柱 quyu => 区域型空域 *
+                top: 200, // {number} 单位米，type为yuanxing时可用，上面半径
+                bottom: 200, // {number} 单位米，type为yuanxing时可用，下面半径
+                length: 400, // {number} 单位米，拉伸高度
+                color: '#00ff0080', // {string} 颜色字符串
+                onCreate: (json, json_pingmian) => { // demo
+                    console.log('created quyu')
+                    console.log(json)
+                    console.log(json_pingmian)
+
+
+
+                    api_1.setStyle({
+                        type: 'yuanxing',
+                        color: '#ff000090',
+                        length: 1000
+                    })
+
+                    // 主动获取json
+                    const json_new = api_1.getJson()
+                    console.log(json_new);
+
+                }
+            }
+            api_1.draw(option)
+        }, 2000);
+
+
+        setTimeout(() => {
+            return
+            const json = {
+                "type": "Feature",
+                "properties": { "type": "quyu", "length": 400, "color": "#ff000020" },
+                "geometry": {
+                    "type": "Polygon", "coordinates":
+                        [[
+                            [120.592733, 31.305976, 0.0], [120.592728, 31.30607, 0.0], [120.59271, 31.306163, 0.0], [120.592682, 31.306254, 0.0],
+                            [120.592642, 31.306341, 0.0], [120.592593, 31.306425, 0.0], [120.592533, 31.306504, 0.0], [120.592463, 31.306577, 0.0],
+                            [120.592386, 31.306644, 0.0], [120.5923, 31.306703, 0.0], [120.592208, 31.306754, 0.0], [120.59211, 31.306797, 0.0], [120.592007, 31.30683, 0.0],
+                            [120.591901, 31.306855, 0.0], [120.591792, 31.306869, 0.0], [120.591682, 31.306874, 0.0], [120.591572, 31.306869, 0.0], [120.591463, 31.306855, 0.0],
+                            [120.591357, 31.30683, 0.0], [120.591254, 31.306797, 0.0], [120.591156, 31.306754, 0.0], [120.591064, 31.306703, 0.0], [120.590978, 31.306644, 0.0],
+                            [120.590901, 31.306577, 0.0], [120.590831, 31.306504, 0.0], [120.590771, 31.306425, 0.0], [120.590722, 31.306341, 0.0], [120.590682, 31.306254, 0.0],
+                            [120.590654, 31.306163, 0.0], [120.590636, 31.30607, 0.0], [120.590631, 31.305976, 0.0], [120.590636, 31.305882, 0.0], [120.590654, 31.305789, 0.0],
+                            [120.590682, 31.305698, 0.0], [120.590722, 31.305611, 0.0], [120.590771, 31.305527, 0.0], [120.590831, 31.305448, 0.0], [120.590901, 31.305375, 0.0],
+                            [120.590978, 31.305308, 0.0], [120.591064, 31.305249, 0.0], [120.591156, 31.305198, 0.0], [120.591254, 31.305155, 0.0], [120.591357, 31.305122, 0.0],
+                            [120.591463, 31.305097, 0.0], [120.591572, 31.305083, 0.0], [120.591682, 31.305078, 0.0], [120.591792, 31.305083, 0.0], [120.591901, 31.305097, 0.0],
+                            [120.592007, 31.305122, 0.0], [120.59211, 31.305155, 0.0], [120.592208, 31.305198, 0.0], [120.5923, 31.305249, 0.0], [120.592386, 31.305308, 0.0],
+                            [120.592463, 31.305375, 0.0], [120.592533, 31.305448, 0.0], [120.592593, 31.305527, 0.0], [120.592642, 31.305611, 0.0], [120.592682, 31.305698, 0.0],
+                            [120.59271, 31.305789, 0.0], [120.592728, 31.305882, 0.0], [120.592733, 31.305976, 0.0]
+                        ]]
+
+                }
+            }
+
+            const option_addwithjson = {
+                attr: {
+                    asad: '123',
+                    asd: 'fdsf'
+                },
+                style: {
+                    color: '#66ccff90', // 填充颜色
+                    outline: true, // 是否显示外边线框
+                    outlineColor: '#66cccc', // 外边框颜色
+                    selectedStyle: {
+                        color: '#66ccff', // 填充颜色
+                    },
+
+                    image: {
+                        displayDistance: 8000,
+                        url: './img/pin1.png',
+                        width: 32,
+                        height: 32,
+                        anchor: ['center', 'bottom'],
+                        selectedStyle: {
+                            url: './img/pin2.png',
+                            width: 100,
+                            height: 100,
+                            anchor: ['center', 'bottom'],
+                        }
+                    },
+                    text: {
+                        displayDistance: 8000,
+                        content: 'asdsad',
+                        color: '#00ff00',
+                        offset: [0, -20],
+                        selectedStyle: {
+                            content: '我爱睡觉的洒家打开泼洒角度考虑就撒开了',
+                            color: '#ff0000',
+                        }
+                    }
+                },
+            }
+
+
+            const opt1 = Object.assign({
+                json: json
+            }, option_addwithjson)
+
+            const ddd = api.addPingMianWithJson(opt1)
+
+            console.log(ddd);
+
+            api.fly(ddd)
+
+
+        }, 2000);
+
+    </script>
+</body>
+
+</html>
