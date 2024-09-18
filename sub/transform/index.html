@@ -112,10 +112,7 @@
                 L.marker(latlng).bindTooltip(info, { permanent: true }).addTo(markerLayer)
             } else marker1 = L.marker(latlng).bindPopup(info).addTo(markerLayer).openPopup()
 
-            return {
-                longitude: position_amap[0],
-                latitude: position_amap[1]
-            }
+            return position_amap
         }
 
         function wgs84ToAMap(latlng, count = 5) {
