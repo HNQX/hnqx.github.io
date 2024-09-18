@@ -134,7 +134,10 @@
 
             data.forEach(async i => {
                 const latLng = { lng: Number(i.longitude), lat: Number(i.latitude) }
-                i.position_aMap = marker(latLng, true)
+
+                const position_amap = marker(latLng, true)
+                i.longitude_amap = position_amap[0]
+                i.latitude_amap = position_amap[1]
             })
 
             excelData = data
