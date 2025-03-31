@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./leaflet/dist/leaflet.js"></script>
+    <script src="./leaflet.chinatmsproviders/src/leaflet.ChineseTmsProviders.js"></script>
+    <link rel="stylesheet" href="./leaflet/dist/leaflet.css">
+    <script src="./leaflet-tilelayer-wmts-src.js"></script>
+
+    <script src="./exceljs/dist/exceljs.js"></script>
+
+    <!-- <script src="./node_modules/file-saver/src/FileSaver.js"></script> -->
+    <script src="./file-saver/dist/FileSaver.min.js"></script>
+
+    <script src="./gcoord/dist/gcoord.global.js"></script>
+
+    <script src=".//turf.min.js"></script>
+
+
+    <title>Document</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .panel {
+            position: absolute;
+            z-index: 1001;
+            right: 100px;
+            top: 0;
+            margin: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="panel">
+        <!-- <button onclick="input1()">输入经纬度</button> -->
+        <!-- <button onclick="clear1()">清除</button> -->
+        <button id="exportExcel">导出</button>
+
+        <input type="file" accept=".xls,.xlsx" id="fileUpload" />
+    </div>
+    <script type="module">
+
+
+        const btn_exportExcel = document.getElementById('exportExcel')
+        btn_exportExcel.onclick = exportExcel
+        let excelData
+
+        let marker1
+
+        _switchBtn(false)
+
+
+        const btn_fileUpload = document.getElementById('fileUpload')
+        btn_fileUpload.onchange = importExcel
+
+        const map = L.map('map', {
+            center: [31.4, 121],
+            zoom: 10
+        })
+        const layer1 = L.tileLayer.chinaProvider('GaoDe.Satellite.Map').addTo(map);
+        const layer2 = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion')
+
+        addSuzhou()
+
+
+        const markerLayer = L.layerGroup().addTo(map)
+        const layer_excel = L.featureGroup().addTo(map)
+
+
+        L.control.layers({}, { '卫星图': layer1, '注记': layer2, }).addTo(map)
+
+        map.on('click', e => {
+            marker1 && marker1.remove()
+            marker(e.latlng)
+        })
+
+
+        function clear1() {
+            markerLayer.clearLayers()
+        }
+
+        function input1() {
+
+            const input = window.prompt('请输入经纬度，用英文逗号隔开，如  120，30')
+            const position = input.split(',')
+            const lng = Number(position[0])
+            const lat = Number(position[1])
+            marker({ lng, lat })
+        }
+
+
+        const arr_district = {}
+        function addSuzhou() {
+
+            fetch('https://geo.datav.aliyun.com/areas_v3/bound/320500_full.json').then(r => r.json()).then(r => {
+
+                L.geoJSON(r, {
+                    style: {
+                        weight: 2,
+                        fill: false,
+                    },
+                    onEachFeature: (feature, layer) => {
+
+                        arr_district[feature.properties.name] = feature
+                    }
+                }).addTo(layer_excel)
+
+            })
+
+        }
+
+
+
+        function marker(latlng, isTooltip) {
+
+            const position_amap = wgs84ToAMap(latlng)
+
+            const info = `<div>
+                    <h3>WGS84</h3>
+                    <div>${latlng.lng.toFixed(5)},${latlng.lat.toFixed(5)}</div>
+                    <h3>高德坐标</h3>
+                    <div>${position_amap}</div>
+                </div>`
+
+
+            if (isTooltip) {
+                L.marker(latlng).bindTooltip(info, { permanent: true }).addTo(markerLayer)
+            } else marker1 = L.marker(latlng).bindPopup(info).addTo(markerLayer).openPopup()
+
+            return position_amap
+        }
+
+        function wgs84ToAMap(latlng, count = 5) {
+            const result = gcoord.transform([latlng.lng, latlng.lat], gcoord.WGS84, gcoord.GCJ02)
+            return result.map(i => Number(i.toFixed(count)))
+        }
+
+        async function getFeatureInfo(latlng) {
+            return new Promise((resolve, reject) => {
+                resolve(wgs84ToAMap(latlng))
+            })
+        }
+
+        async function readComplete(data) {
+            const fun = []
+
+
+            data && data.forEach(i => {
+
+                if (!i || !i.geojson) return
+
+
+                L.geoJSON(JSON.parse(i.geojson), {
+                    style: {
+                        color: '#ff0000b2'
+                    },
+                    onEachFeature: (feature, layer) => {
+
+                        layer.addTo(layer_excel)
+
+                        const center = feature.type === 'Point' ? layer.getLatLng() : layer.getCenter()
+
+                        const point = turf.point([center.lng, center.lat])
+                        for (let ii in arr_district) {
+
+                            if (arr_district.hasOwnProperty(ii)) {
+
+                                if (turf.booleanWithin(point, arr_district[ii],)) {
+
+                                    i['所属qqq'] = ii
+                                    layer.bindTooltip(ii,{permanent:true})
+                                    break
+                                }
+                            }
+                        }
+
+                    }
+                })
+            })
+
+
+            excelData = data
+            _switchBtn(true)
+
+            data.forEach(i => {
+                if (!i['所属qqq']) {
+                    if (!i.geojson) {
+                        console.log(i)
+                        return
+                    }
+                    L.geoJSON(JSON.parse(i.geojson), {
+                        style: {
+                            color: '#ffff00'
+                        }
+                    }).addTo(map).bindTooltip('no',{permanent:true})
+                }
+            })
+
+ 
+        }
+
+        function exportExcel() {
+            const data = excelData
+            const workbook = new ExcelJS.Workbook()
+            const sheet1 = workbook.addWorksheet("sheet1")
+            const headers = Object.keys(data[0])
+            // 将标题写入第一行
+            sheet1.addRow(headers)
+            // 将数据写入工作表
+            data.forEach((row) => {
+                const values = Object.values(row)
+                sheet1.addRow(values)
+            })
+
+            excelData = null
+            _switchBtn(false)
+
+            // 导出表格文件
+            workbook.xlsx.writeBuffer().then((buffer) => {
+                let file = new Blob([buffer], { type: "application/octet-stream" });
+                saveAs(file, "payload.xlsx")
+
+                btn_fileUpload.value = ''
+
+            }).catch(error => console.log('Error writing excel export', error))
+        }
+
+        function importExcel(event) {
+            //获取选择的文件
+            const files = event.target.files
+
+            //创建Workbook实例
+            const workbook = new ExcelJS.Workbook();
+            // 使用FileReader对象来读取文件内容
+            const fileReader = new FileReader()
+            // 二进制字符串的形式加载文件
+            fileReader.readAsArrayBuffer(files[0])
+
+            fileReader.onload = ev => {
+                // console.log(ev)
+                // 从 buffer中加载数据解析
+                workbook.xlsx.load(ev.target.result).then(workbook => {
+                    // 获取第一个worksheet内容
+                    const worksheet = workbook.getWorksheet(1);
+                    // 获取第一行的标题
+                    const headers = [];
+                    worksheet.getRow(1).eachCell((cell) => {
+                        console.log(cell.value);
+
+                        headers.push(cell.value);
+                    });
+                    // 创建一个空的JavaScript对象数组，用于存储解析后的数据
+                    const data = [];
+                    // 遍历工作表的每一行（从第二行开始，因为第一行通常是标题行）
+                    for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber++) {
+                        const rowData = {};
+                        const row = worksheet.getRow(rowNumber);
+                        // 遍历当前行的每个单元格
+                        row.eachCell((cell, colNumber) => {
+                            // 获取标题对应的键，并将当前单元格的值存储到相应的属性名中
+                            rowData[headers[colNumber - 1]] = cell.value;
+                        });
+                        // 将当前行的数据对象添加到数组中
+                        data.push(rowData);
+                    }
+                    readComplete && readComplete(data)
+                })
+            }
+        }
+
+        function _switchBtn(flag) {
+            btn_exportExcel.disabled = !flag
+        }
+
+    </script>
+
+</body>
+
+</html>
