@@ -105,7 +105,7 @@
         const arr_district = {}
         function addSuzhou() {
 
-            fetch('https://geo.datav.aliyun.com/areas_v3/bound/320500_full.json').then(r => r.json()).then(r => {
+            fetch('./320500_full.json').then(r => r.json()).then(r => {
 
                 L.geoJSON(r, {
                     style: {
