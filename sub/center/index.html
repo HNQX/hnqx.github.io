@@ -73,8 +73,9 @@
         const layer1 = L.tileLayer.chinaProvider('GaoDe.Satellite.Map').addTo(map);
         const layer2 = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion')
 
-        addSuzhou()
+        // addSuzhou()
 
+        addChina()
 
         const markerLayer = L.layerGroup().addTo(map)
         const layer_excel = L.featureGroup().addTo(map)
@@ -105,7 +106,9 @@
         const arr_district = {}
         function addSuzhou() {
 
-            fetch('./320500_full.json').then(r => r.json()).then(r => {
+            const jsonFile = './320500_full.json'
+            // const jsonFile = './中华人民共和国.json'
+            fetch(jsonFile).then(r => r.json()).then(r => {
 
                 L.geoJSON(r, {
                     style: {
@@ -113,7 +116,6 @@
                         fill: false,
                     },
                     onEachFeature: (feature, layer) => {
-
                         arr_district[feature.properties.name] = feature
                     }
                 }).addTo(layer_excel)
@@ -122,6 +124,50 @@
 
         }
 
+
+        const arr_bound = {}
+        function addChina() {
+
+            const jsonFile = './china.json'
+            // const jsonFile = './province.json'
+            fetch(jsonFile).then(r => r.json()).then(r => {
+
+                L.geoJSON(r, {
+                    style: {
+                        weight: 2,
+                        fill: false,
+                    },
+                    onEachFeature: (feature, layer) => {
+                        arr_bound[feature.properties.name] = feature
+                    }
+                }).addTo(layer_excel)
+
+
+                console.log(arr_bound);
+
+            })
+
+
+        }
+
+
+        function computePlace(latlng) {
+            const point = turf.point([latlng.lng, latlng.lat])
+            let address
+            for (let ii in arr_bound) {
+
+                if (arr_bound.hasOwnProperty(ii)) {
+                    if (turf.booleanWithin(point, arr_bound[ii],)) {
+                        console.log(arr_bound[ii]);
+                        
+                        address = ii
+                        break
+                    }
+                }
+            }
+
+            return address || '国外'
+        }
 
 
         function marker(latlng, isTooltip) {
@@ -133,6 +179,7 @@
                     <div>${latlng.lng.toFixed(5)},${latlng.lat.toFixed(5)}</div>
                     <h3>高德坐标</h3>
                     <div>${position_amap}</div>
+                    <h2>地址：${computePlace(latlng)}</h2>
                 </div>`
 
 
@@ -181,7 +228,7 @@
                                 if (turf.booleanWithin(point, arr_district[ii],)) {
 
                                     i['所属qqq'] = ii
-                                    layer.bindTooltip(ii,{permanent:true})
+                                    layer.bindTooltip(ii, { permanent: true })
                                     break
                                 }
                             }
@@ -205,11 +252,11 @@
                         style: {
                             color: '#ffff00'
                         }
-                    }).addTo(map).bindTooltip('no',{permanent:true})
+                    }).addTo(map).bindTooltip('no', { permanent: true })
                 }
             })
 
- 
+
         }
 
         function exportExcel() {
